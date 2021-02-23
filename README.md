@@ -1,3 +1,6 @@
 # Next Level Week - Trilha Node.js - Edição 4
 
-Aplicativo feito na Next Level Week 4 na trilha Node.js, porém em vez de usar typescript e CSS estou usando javascript e SCSS
+Aplicação Web feito durante a Next Level Week 4 na trilha Node.js
+porém eu fiz algumas alterações feita algumas mudanças como:
+* Usei javascript em vez de typescript 
+* Usei SCSS em vez do CSS
