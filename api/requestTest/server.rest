@@ -1,14 +1,12 @@
 ### GET
-GET http://localhost:3333/
+GET http://localhost:3333/user
 
 ### POST
-POST http://localhost:3333/
+POST http://localhost:3333/user
 Content-Type: application/json
 
 {
-    "email": "admin@gmail.com",
-    "passwd": "admin",
-    "permission": "admin",
-    "address": "Rua das Rosas 255",
-    "phone": "(79)9 8844-3885"
+    "nome": "Eduardo",
+    "email": "edu@email.com",
+
 }

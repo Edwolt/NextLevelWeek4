@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 
 class UserController {
-    async create(request: Request, response: Response) {
-        const body = request.body
+    async create(req: Request, res: Response) {
+        const body = req.body
         console.log(body)
-        return response.send()
+        return res.send()
     }
 }
 
