@@ -3,7 +3,7 @@
 import 'reflect-metadata'
 import express from 'express'
 import './database'
-import router from './router'
+import router from './routes'
 
 const app = express();
 
