@@ -1,3 +1,5 @@
+// Obs: no ormconfig pode adicionar a funcionalidade logging:true para mostrar exatamente quais são as requisições ao banco de dados
+
 import 'reflect-metadata'
 import express from 'express'
 import './database'
