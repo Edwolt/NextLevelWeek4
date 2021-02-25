@@ -16,7 +16,7 @@ describe('Users', () => {
         expect(res.status).toBe(201)
     })
 
-    it('Shouldn\'t be able to create an user with exists email', async () => {
+    it("Shouldn't be able to create an user with exists email", async () => {
         const res = await request(app)
             .post('/users')
             .send({ email: 'user@example.com', name: 'User Example' })

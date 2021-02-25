@@ -19,3 +19,12 @@ Content-Type: application/json
     "title": "Queremos ouvir sua opinião!",
     "description": "De 0 a 10 quanto você recomendaria a RocketSeat"
 }
+
+### Create Survey User and send Email
+POST http://localhost:3333/sendMail
+Content-Type: application/json
+
+{
+    "email": "edu@email.com",
+    "survey_id": "320e8730-f483-49d9-943b-eb0a3a0dbbcb"
+}
