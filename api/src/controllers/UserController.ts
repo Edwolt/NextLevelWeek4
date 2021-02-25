@@ -14,6 +14,6 @@ export default class UserController {
         const user = repository.create({ name, email })
 
         await repository.save(user)
-        return res.json(user)
+        return res.status(201).json(user)
     }
 }
