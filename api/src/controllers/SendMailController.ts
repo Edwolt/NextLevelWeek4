@@ -20,11 +20,6 @@ export default class SendMailController {
         const survey = await surveysRepository.findOne({ id: survey_id })
         if (!survey) return res.status(400).json({ erro: "Survey doesn't exists!" })
 
-        // Salvar as informações na tabela
-        const surveyUser = surveysUsersRepository.create({ survey_id, user_id: user.id })
-        await surveysUsersRepository.save(surveyUser)
-
-        // Enviar email para o usuário
         const templatePath = resolve(__dirname, '..', 'views', 'emails', 'npsMail.hbs')
         const variables = {
             name: user.name,
@@ -33,6 +28,21 @@ export default class SendMailController {
             user_id: user.id,
             link: process.env.URL_MAIL
         }
+
+        // Verifica se o usuário já respondeu a pesquisa
+        const surveyUserExists = await surveysUsersRepository.findOne({
+            where: [{ user_id: user.id }, { value: null }]
+        })
+        if (surveyUserExists) {
+            await SendMailService.execute(email, survey.title, variables, templatePath)
+            return res.json(surveyUserExists)
+        }
+
+        // Salvar as informações na tabela
+        const surveyUser = surveysUsersRepository.create({ survey_id, user_id: user.id })
+        await surveysUsersRepository.save(surveyUser)
+
+        // Enviar email para o usuário
 
         await SendMailService.execute(email, survey.title, variables, templatePath)
 

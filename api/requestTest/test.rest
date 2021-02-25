@@ -3,7 +3,7 @@ POST http://localhost:3333/users
 Content-Type: application/json
 
 {
-    "name": "eduardo",
+    "name": "Eduardo",
     "email": "edu@email.com"
 }
 
@@ -26,5 +26,5 @@ Content-Type: application/json
 
 {
     "email": "edu@email.com",
-    "survey_id": "320e8730-f483-49d9-943b-eb0a3a0dbbcb"
+    "survey_id": "aec920be-ff51-40c1-b332-29926ed5477b"
 }
