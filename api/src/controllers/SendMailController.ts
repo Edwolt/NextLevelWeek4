@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
-import { getCustomRepository } from 'typeorm';
-import SurveysRepository from '../repositories/SurveysRepository';
-import SurveysUsersRepository from '../repositories/SurveysUsersRepository';
-import UsersRepository from '../repositories/UsersRepository';
-import SendMailService from '../services/SendMailService';
+import { Request, Response } from 'express'
+import { getCustomRepository } from 'typeorm'
+import SurveysRepository from '../repositories/SurveysRepository'
+import SurveysUsersRepository from '../repositories/SurveysUsersRepository'
+import UsersRepository from '../repositories/UsersRepository'
+import SendMailService from '../services/SendMailService'
 import { resolve } from 'path'
 
 export default class SendMailController {
