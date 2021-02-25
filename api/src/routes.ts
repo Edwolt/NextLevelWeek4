@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import SurveysController from './controllers/SurveysController'
 import UserController from './controllers/UserController'
 
 const router = Router()
@@ -13,6 +14,9 @@ const router = Router()
 */
 
 const user = new UserController()
+const survery = new SurveysController()
+
 router.post('/users', user.create)
+router.post('/surveys', survery.create)
 
 export default router
