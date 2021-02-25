@@ -17,6 +17,8 @@ const user = new UserController()
 const survery = new SurveysController()
 
 router.post('/users', user.create)
+
 router.post('/surveys', survery.create)
+router.get('/surveys', survery.show)
 
 export default router
