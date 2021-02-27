@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import AnswerController from './controllers/AnswerController'
+import NpsController from './controllers/NpsController'
 import SendMailController from './controllers/SendMailController'
 import SurveysController from './controllers/SurveysController'
 import UserController from './controllers/UserController'
@@ -18,7 +19,8 @@ const router = Router()
 const user = new UserController()
 const survery = new SurveysController()
 const sendMail = new SendMailController()
-const answer = new AnswerController
+const answer = new AnswerController()
+const nps = new NpsController()
 
 router.post('/users', user.create)
 
@@ -28,5 +30,7 @@ router.get('/surveys', survery.show)
 router.post('/sendMail', sendMail.execute)
 
 router.get('/answers/:value', answer.execute)
+
+router.get('/nps/:survey_id', nps.execute)
 
 export default router

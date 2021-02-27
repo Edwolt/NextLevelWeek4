@@ -28,3 +28,6 @@ Content-Type: application/json
     "email": "edu@email.com",
     "survey_id": "aec920be-ff51-40c1-b332-29926ed5477b"
 }
+
+### Get NPS
+GET http://localhost:3333/nps/aec920be-ff51-40c1-b332-29926ed5477b
