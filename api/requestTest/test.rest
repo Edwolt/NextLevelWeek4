@@ -12,8 +12,17 @@ POST http://localhost:3333/users
 Content-Type: application/json
 
 {
-    "nome": "Eduardo",
+    "nome": "",
     "email": "edu@email.com"
+}
+
+### Invalid Create User
+POST http://localhost:3333/users
+Content-Type: application/json
+
+{
+    "name": "",
+    "email": "eduardo"
 }
 
 ### List All Survery

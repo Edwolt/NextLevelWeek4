@@ -8,10 +8,15 @@ export default class UserController {
         const { name, email } = req.body
 
         const schema = yup.object().shape({
-            name: yup.string().required(),
-            email: yup.string().email().required()
+            name: yup.string().required('Nome é obrigatório'),
+            email: yup.string().email('Email Incorreto').required('Email é obrigatório')
         })
-        if (!await schema.isValid(req.body)) { return res.status(400).json({ error: 'Validation Failed!' }) }
+
+        try {
+            await schema.validate(req.body, { abortEarly: false })
+        } catch (err) {
+            return res.status(400).json({ erros: err })
+        }
 
         const repository = getCustomRepository(UsersRepository)
 
