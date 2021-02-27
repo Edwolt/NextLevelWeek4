@@ -7,6 +7,15 @@ Content-Type: application/json
     "email": "edu@email.com"
 }
 
+### Invalid Create User
+POST http://localhost:3333/users
+Content-Type: application/json
+
+{
+    "nome": "Eduardo",
+    "email": "edu@email.com"
+}
+
 ### List All Survery
 GET http://localhost:3333/surveys
 Content-Type: application/json
