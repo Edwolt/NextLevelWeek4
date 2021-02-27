@@ -24,7 +24,7 @@ export default class NpsController {
         const promoters = surveysUsers.filter(survey => 9 && survey.value <= 10).length
         const passives = surveysUsers.filter(survey => survey.value >= 7 && survey.value <= 8).length
         const totalAnswers = surveysUsers.length
-        const calculate = (promoters - detractors) / totalAnswers
+        const calculate = Number((((promoters - detractors) / totalAnswers) * 100).toFixed(2))
 
         return res.json({ detractors, promoters, passives, totalAnswers, nps: calculate })
     }
