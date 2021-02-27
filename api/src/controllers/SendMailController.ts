@@ -31,7 +31,7 @@ export default class SendMailController {
 
         // Verifica se o usuário já respondeu a pesquisa
         const surveyUserExists = await surveysUsersRepository.findOne({
-            where: [{ user_id: user.id }, { value: null }],
+            where: { user_id: user.id, value: null },
             relations: ['user', 'survey']
         })
         if (surveyUserExists) {
