@@ -4,7 +4,7 @@ import { Connection, createConnection, getConnectionOptions } from 'typeorm'
 import express, { NextFunction, Request, Response } from 'express'
 import connect from './database'
 import 'express-async-errors'
-import AppError from './error/AppError'
+import AppError from './modules/AppError'
 import router from './routes'
 
 connect()
