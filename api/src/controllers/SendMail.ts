@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { getRepository } from 'typeorm'
 import SendMailService from '../services/SendMailService'
 import { resolve } from 'path'
-import AppError from '../error/AppErros'
+import AppError from '../error/AppError'
 
 import Survey from '../models/Survey'
 import SurveyUser from '../models/SurveyUser'
