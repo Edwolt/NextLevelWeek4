@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import AnswerController from './controllers/AnswerController'
-import NpsController from './controllers/NpsController'
-import SendMailController from './controllers/SendMailController'
-import SurveysController from './controllers/SurveysController'
-import UserController from './controllers/UserController'
+import Answer from './controllers/Answer'
+import Nps from './controllers/Nps'
+import SendMail from './controllers/SendMail'
+import Surveys from './controllers/Surveys'
+import User from './controllers/User'
 
 const router = Router()
 
@@ -16,11 +16,11 @@ const router = Router()
 - etc.
 */
 
-const user = new UserController()
-const survery = new SurveysController()
-const sendMail = new SendMailController()
-const answer = new AnswerController()
-const nps = new NpsController()
+const user = new User()
+const survery = new Surveys()
+const sendMail = new SendMail()
+const answer = new Answer()
+const nps= new Nps()
 
 router.post('/users', user.create)
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getCustomRepository, IsNull, Not } from "typeorm";
-import SurveysUsersRepository from "../repositories/SurveysUsersRepository";
+import SurveysUsersRepository from "../repositories/SurveysUsers";
 
 export default class NpsController {
     async execute(req: Request, res: Response) {

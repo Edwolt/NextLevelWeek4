@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
-import UsersRepository from '../repositories/UsersRepository'
+import UsersRepository from '../repositories/Users'
 import * as yup from 'yup'
 import AppError from '../error/AppErros'
 

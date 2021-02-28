@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
 import AppError from "../error/AppErros";
-import SurveysUsersRepository from "../repositories/SurveysUsersRepository";
+import SurveysUsersRepository from "../repositories/SurveysUsers";
 
 export default class AnswerController {
     /*
