@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import { getCustomRepository } from 'typeorm'
-import SurveysRepository from '../repositories/Surveys'
+import { getRepository } from 'typeorm'
+import Survey from '../models/Survey'
 
 export default class SurverysController {
     async create(req: Request, res: Response) {
         const { title, description } = req.body
 
-        const repository = getCustomRepository(SurveysRepository)
+        const repository = getRepository(Survey)
         
         const survey = repository.create({ title, description })
         
@@ -15,7 +15,7 @@ export default class SurverysController {
     }
     
     async show(req:Request, res:Response){
-        const repository = getCustomRepository(SurveysRepository)
+        const repository = getRepository(Survey)
         const all = await repository.find()
         return res.json(all)
     }

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { getCustomRepository } from "typeorm";
+import { getCustomRepository as getRepository } from "typeorm";
 import AppError from "../error/AppErros";
-import SurveysUsersRepository from "../repositories/SurveysUsers";
+import SurveysUsers from "../models/SurveyUser";
 
 export default class AnswerController {
     /*
@@ -17,7 +17,7 @@ export default class AnswerController {
         const value = req.params.value
         const u = req.query.u
 
-        const surveysUsersRepository = getCustomRepository(SurveysUsersRepository)
+        const surveysUsersRepository = getRepository(SurveysUsers)
 
         const surveyUser = await surveysUsersRepository.findOne({ id: String(u) })
 

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { getCustomRepository } from 'typeorm'
-import UsersRepository from '../repositories/Users'
+import { getRepository } from 'typeorm'
+import User from '../models/User'
 import * as yup from 'yup'
 import AppError from '../error/AppErros'
 
@@ -19,7 +19,7 @@ export default class UserController {
             throw new AppError(err)
         }
 
-        const repository = getCustomRepository(UsersRepository)
+        const repository = getRepository(User)
 
         const exists = await repository.findOne({ email }) // SELECT * FROM USERS WHERE EMAIL = "EMAIL"
         if (exists) throw new AppError('User already exists!')

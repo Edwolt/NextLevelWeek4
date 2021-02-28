@@ -1,19 +1,20 @@
 import { Request, Response } from 'express'
-import { getCustomRepository } from 'typeorm'
-import SurveysRepository from '../repositories/Surveys'
-import SurveysUsersRepository from '../repositories/SurveysUsers'
-import UsersRepository from '../repositories/Users'
+import { getRepository } from 'typeorm'
 import SendMailService from '../services/SendMailService'
 import { resolve } from 'path'
 import AppError from '../error/AppErros'
+
+import Survey from '../models/Survey'
+import SurveyUser from '../models/SurveyUser'
+import User from '../models/User'
 
 export default class SendMailController {
     async execute(req: Request, res: Response) {
         const { email, survey_id } = req.body
 
-        const usersRepository = getCustomRepository(UsersRepository)
-        const surveysRepository = getCustomRepository(SurveysRepository)
-        const surveysUsersRepository = getCustomRepository(SurveysUsersRepository)
+        const usersRepository = getRepository(User)
+        const surveysRepository = getRepository(Survey)
+        const surveysUsersRepository = getRepository(SurveyUser)
 
         const user = await usersRepository.findOne({ email })
         if (!user) throw new AppError("User doesn't exist!")
