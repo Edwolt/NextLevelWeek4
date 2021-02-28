@@ -23,12 +23,6 @@ export default class SendMailController {
 
         const templatePath = resolve(__dirname, '..', 'views', 'emails', 'npsMail.hbs')
 
-        // Verifica se o usuário já respondeu a pesquisa
-        const surveyUserExists = await surveysUsersRepository.findOne({
-            where: { user_id: user.id, value: null },
-            relations: ['user', 'survey']
-        })
-
         const variables = {
             name: user.name,
             title: survey.title,
@@ -37,20 +31,28 @@ export default class SendMailController {
             link: process.env.URL_MAIL
         }
 
-        if (surveyUserExists) {
-            variables.id = surveyUserExists.id
+        // Verifica se o usuário já respondeu a pesquisa
+        let surveyUser = await surveysUsersRepository.findOne({
+            where: { user_id: user.id, value: null },
+            relations: ['user', 'survey']
+        })
+
+
+        let status = 500
+        if (surveyUser) {
+            variables.id = surveyUser.id
             await SendMailService.execute(email, survey.title, variables, templatePath)
-            return res.json(surveyUserExists)
+            status = 200
+        } else {
+            surveyUser = surveysUsersRepository.create({ survey_id, user_id: user.id })
+            variables.id = surveyUser.id
+            await surveysUsersRepository.save(surveyUser)// Salvar as informações na tabela
+            status = 201
         }
 
-        // Salvar as informações na tabela
-        const surveyUser = surveysUsersRepository.create({ survey_id, user_id: user.id })
-        await surveysUsersRepository.save(surveyUser)
-
         // Enviar email para o usuário
-        variables.id = surveyUser.id
         await SendMailService.execute(email, survey.title, variables, templatePath)
 
-        return res.status(201).json(surveyUser)
+        return res.status(status).json(surveyUser)
     }
 }
