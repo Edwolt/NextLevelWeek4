@@ -1,7 +1,7 @@
 # Next Level Week - Trilha Node.js - Edição 4
 
 API que calcula o NPS feito durante a Next Level Week 4 na trilha Node.js
-Obs: existem algumas mudanças na identação e no nome de algumas variáveis
+Obs: existem algumas mudanças
 
 A API permite:
 * Cadastrar usuários
