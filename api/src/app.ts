@@ -1,9 +1,9 @@
 // Obs: no ormconfig pode adicionar a funcionalidade logging:true para mostrar exatamente quais são as requisições ao banco de dados
 import 'reflect-metadata'
-import { Connection, createConnection, getConnectionOptions } from 'typeorm'
 import express, { NextFunction, Request, Response } from 'express'
 import connect from './database'
 import 'express-async-errors'
+
 import AppError from './modules/AppError'
 import router from './routes'
 

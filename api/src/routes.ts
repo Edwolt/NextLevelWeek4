@@ -1,15 +1,15 @@
 import { Request, Response, Router } from 'express'
 import * as yup from 'yup'
 import { getRepository, IsNull, Not, Repository } from "typeorm"
-import AppError from './modules/AppError'
+import path from 'path'
+
 import Survey from './models/Survey'
 import User from './models/User'
 import SurveyUser from './models/SurveyUser'
-import sendMail from './modules/SendMail'
-import { resolve } from 'path'
 
+import AppError from './modules/AppError'
+import SendMail from './modules/SendMail'
 
-const router = Router()
 
 /* Rotas
 - GET: Buscar
@@ -19,8 +19,16 @@ const router = Router()
 - PATCH: Alteração específica
 - etc.
 */
+const router = Router()
 
-let repos: any = null
+interface Repos {
+    user: Repository<User>
+    survey: Repository<Survey>
+    surveyUser: Repository<SurveyUser>
+}
+
+// Use repos = repos ?? getRepos()
+let repos: Repos = null
 const getRepos = () => ({
     user: getRepository(User),
     survey: getRepository(Survey),
@@ -31,6 +39,7 @@ const getRepos = () => ({
 // Create User
 router.post('/users', async (req: Request, res: Response) => {
     repos = repos ?? getRepos()
+
     const schema = yup.object().shape({
         name: yup.string().required('Nome é obrigatório'),
         email: yup.string().email('Email Incorreto').required('Email é obrigatório')
@@ -48,7 +57,6 @@ router.post('/users', async (req: Request, res: Response) => {
     if (exists) throw new AppError('User already exists!')
 
     const user = repos.user.create({ name, email })
-
     await repos.user.save(user)
     return res.status(201).json(user)
 })
@@ -56,35 +64,31 @@ router.post('/users', async (req: Request, res: Response) => {
 // Create Survey
 router.post('/surveys', async (req: Request, res: Response) => {
     repos = repos ?? getRepos()
+
     const { title, description } = req.body
-
     const survey = repos.survey.create({ title, description })
-
     await repos.survey.save(survey)
     return res.status(201).json(survey)
 })
 
 router.get('/surveys', async (req: Request, res: Response) => {
     repos = repos ?? getRepos()
-    const all = await repos.survey.find()
-    return res.json(all)
+    return res.json(await repos.survey.find())
 })
 
 // Send E-mail and create a Survey User if it does'nt exists yet
 router.post('/sendMail', async (req: Request, res: Response) => {
+    repos = repos ?? getRepos()
+
     const { email, survey_id } = req.body
 
-    const usersRepository = getRepository(User)
-    const surveysRepository = getRepository(Survey)
-    const surveysUsersRepository = getRepository(SurveyUser)
-
-    const user = await usersRepository.findOne({ email })
+    const user = await repos.user.findOne({ email })
     if (!user) throw new AppError("User doesn't exist!")
 
-    const survey = await surveysRepository.findOne({ id: survey_id })
+    const survey = await repos.survey.findOne({ id: survey_id })
     if (!survey) throw new AppError("Survey doesn't exists!")
 
-    const templatePath = resolve(__dirname, '..', 'views', 'emails', 'npsMail.hbs')
+    const templatePath = path.resolve(__dirname, '..', 'views', 'emails', 'npsMail.hbs')
 
     const variables = {
         name: user.name,
@@ -95,7 +99,7 @@ router.post('/sendMail', async (req: Request, res: Response) => {
     }
 
     // Verifica se o usuário já respondeu a pesquisa
-    let surveyUser = await surveysUsersRepository.findOne({
+    let surveyUser = await repos.surveyUser.findOne({
         where: { user_id: user.id, value: null },
         relations: ['user', 'survey']
     })
@@ -104,18 +108,17 @@ router.post('/sendMail', async (req: Request, res: Response) => {
     let status = 500
     if (surveyUser) {
         variables.id = surveyUser.id
-        await sendMail.execute(email, survey.title, variables, templatePath)
+        await SendMail.execute(email, survey.title, variables, templatePath)
         status = 200
     } else {
-        surveyUser = surveysUsersRepository.create({ survey_id, user_id: user.id })
+        surveyUser = repos.surveyUser.create({ survey_id, user_id: user.id })
         variables.id = surveyUser.id
-        await surveysUsersRepository.save(surveyUser)// Salvar as informações na tabela
+        await repos.surveyUser.save(surveyUser)// Salvar as informações na tabela
         status = 201
     }
 
     // Enviar email para o usuário
-    await sendMail.execute(email, survey.title, variables, templatePath)
-
+    await SendMail.execute(email, survey.title, variables, templatePath)
     return res.status(status).json(surveyUser)
 })
 
@@ -158,18 +161,23 @@ router.get('/nps/:survey_id', async (req: Request, res: Response) => {
     repos = repos ?? getRepos()
 
     const survey_id = req.params.survey_id
+    const surveysUsers = await repos.surveyUser.find({ survey_id, value: Not(IsNull()) })
 
-    const surveysUsersRepository = getRepository(SurveyUser)
+    let detractors = 0, promoters = 0, passives = 0
+    for (const { value } of surveysUsers) {
+        if (value >= 0 && value <= 6) {
+            detractors++
+        } else if (value <= 8) {
+            passives++
+        } else if (value <= 10) {
+            promoters++
+        }
+    }
+    const total = surveysUsers.length
 
-    const surveysUsers = await surveysUsersRepository.find({ survey_id, value: Not(IsNull()) })
+    const calculate = ((promoters - detractors) / total * 100).toFixed(2)
 
-    const detractors = surveysUsers.filter(survey => survey.value >= 0 && survey.value <= 6).length
-    const promoters = surveysUsers.filter(survey => 9 && survey.value <= 10).length
-    const passives = surveysUsers.filter(survey => survey.value >= 7 && survey.value <= 8).length
-    const totalAnswers = surveysUsers.length
-    const calculate = Number((((promoters - detractors) / totalAnswers) * 100).toFixed(2))
-
-    return res.json({ detractors, promoters, passives, totalAnswers, nps: calculate })
+    return res.json({ detractors, promoters, passives, totalAnswers: total, nps: Number(calculate) })
 })
 
 export default router

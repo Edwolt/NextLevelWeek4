@@ -2,7 +2,7 @@ import nodemailer, { Transporter } from 'nodemailer'
 import handlebars from 'handlebars'
 import fs from 'fs'
 
-class SendMailService {
+class SendMail {
     private client: Transporter
 
     constructor() {  // Constructor não aceita ser async
@@ -28,4 +28,4 @@ class SendMailService {
     }
 }
 
-export default new SendMailService()
+export default new SendMail()
